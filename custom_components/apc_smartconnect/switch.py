@@ -30,7 +30,7 @@ async def async_setup_entry(
     for device_id, device_data in coordinator.data.items():
         device = device_data["device"]
         outlets = device_data.get("outlets", [])
-        
+
         for outlet in outlets:
             if outlet.get("controllable", False):
                 entities.append(
