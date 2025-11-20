@@ -170,7 +170,7 @@ SENSOR_TYPES = {
 ALARM_SENSOR_TYPES = {
     "alarm_active": {
         "name": "Alarm Active",
-        "device_class": "problem",
+        "device_class": SensorDeviceClass.PROBLEM,
         "icon": "mdi:alarm-light",
         "entity_category": EntityCategory.DIAGNOSTIC,
     },
@@ -189,7 +189,7 @@ ALARM_SENSOR_TYPES = {
     },
     "event_active": {
         "name": "Event Active",
-        "device_class": "problem",
+        "device_class": SensorDeviceClass.PROBLEM,
         "icon": "mdi:information-outline",
         "entity_category": EntityCategory.DIAGNOSTIC,
     },
