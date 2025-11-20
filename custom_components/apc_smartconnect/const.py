@@ -2,19 +2,16 @@
 from datetime import timedelta
 from typing import Final
 
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorStateClass,
+)
+from homeassistant.helpers.entity import EntityCategory
+
 DOMAIN: Final = "apc_smartconnect"
 
 # Update interval
 UPDATE_INTERVAL = timedelta(minutes=5)
-
-# Device classes
-DEVICE_CLASS_BATTERY: Final = "battery"
-DEVICE_CLASS_POWER: Final = "power"
-DEVICE_CLASS_VOLTAGE: Final = "voltage"
-DEVICE_CLASS_TEMPERATURE: Final = "temperature"
-DEVICE_CLASS_FREQUENCY: Final = "frequency"
-DEVICE_CLASS_CURRENT: Final = "current"
-DEVICE_CLASS_ENERGY: Final = "energy"
 
 # Unit of measurement
 PERCENTAGE: Final = "%"
@@ -33,10 +30,10 @@ SENSOR_TYPES = {
     # Battery sensors
     "battery_capacity": {
         "name": "Battery Capacity",
-        "device_class": DEVICE_CLASS_BATTERY,
+        "device_class": SensorDeviceClass.BATTERY,
         "unit": PERCENTAGE,
         "icon": "mdi:battery",
-        "state_class": "measurement",
+        "state_class": SensorStateClass.MEASUREMENT,
         "entity_category": None,
     },
     "battery_runtime": {
@@ -44,15 +41,15 @@ SENSOR_TYPES = {
         "device_class": None,
         "unit": MINUTE,
         "icon": "mdi:battery-clock",
-        "state_class": "measurement",
+        "state_class": SensorStateClass.MEASUREMENT,
         "entity_category": None,
     },
     "battery_runtime_seconds": {
         "name": "Battery Runtime Seconds",
-        "device_class": "duration",
+        "device_class": SensorDeviceClass.DURATION,
         "unit": SECONDS,
         "icon": "mdi:battery-clock",
-        "state_class": "measurement",
+        "state_class": SensorStateClass.MEASUREMENT,
         "entity_category": None,
     },
     "battery_status": {
@@ -61,32 +58,32 @@ SENSOR_TYPES = {
         "unit": None,
         "icon": "mdi:battery-heart",
         "state_class": None,
-        "entity_category": "diagnostic",
+        "entity_category": EntityCategory.DIAGNOSTIC,
     },
     # Voltage sensors
     "input_voltage": {
         "name": "Input Voltage",
-        "device_class": DEVICE_CLASS_VOLTAGE,
+        "device_class": SensorDeviceClass.VOLTAGE,
         "unit": VOLT,
         "icon": "mdi:flash",
-        "state_class": "measurement",
+        "state_class": SensorStateClass.MEASUREMENT,
         "entity_category": None,
     },
     "output_voltage": {
         "name": "Output Voltage",
-        "device_class": DEVICE_CLASS_VOLTAGE,
+        "device_class": SensorDeviceClass.VOLTAGE,
         "unit": VOLT,
         "icon": "mdi:flash-outline",
-        "state_class": "measurement",
+        "state_class": SensorStateClass.MEASUREMENT,
         "entity_category": None,
     },
     # Power sensors
     "power": {
         "name": "Power",
-        "device_class": DEVICE_CLASS_POWER,
+        "device_class": SensorDeviceClass.POWER,
         "unit": WATT,
         "icon": "mdi:lightning-bolt",
-        "state_class": "measurement",
+        "state_class": SensorStateClass.MEASUREMENT,
         "entity_category": None,
     },
     "load": {
@@ -94,15 +91,15 @@ SENSOR_TYPES = {
         "device_class": None,
         "unit": PERCENTAGE,
         "icon": "mdi:gauge",
-        "state_class": "measurement",
+        "state_class": SensorStateClass.MEASUREMENT,
         "entity_category": None,
     },
     "apparent_power": {
         "name": "Apparent Power",
-        "device_class": "apparent_power",
+        "device_class": SensorDeviceClass.APPARENT_POWER,
         "unit": VOLT_AMPERE,
         "icon": "mdi:flash-circle",
-        "state_class": "measurement",
+        "state_class": SensorStateClass.MEASUREMENT,
         "entity_category": None,
     },
     # Status sensors
@@ -120,15 +117,15 @@ SENSOR_TYPES = {
         "unit": None,
         "icon": "mdi:state-machine",
         "state_class": None,
-        "entity_category": "diagnostic",
+        "entity_category": EntityCategory.DIAGNOSTIC,
     },
     # Temperature sensors
     "temperature": {
         "name": "Temperature",
-        "device_class": DEVICE_CLASS_TEMPERATURE,
+        "device_class": SensorDeviceClass.TEMPERATURE,
         "unit": CELSIUS,
         "icon": "mdi:thermometer",
-        "state_class": "measurement",
+        "state_class": SensorStateClass.MEASUREMENT,
         "entity_category": None,
     },
     # Network sensors
@@ -138,33 +135,33 @@ SENSOR_TYPES = {
         "unit": None,
         "icon": "mdi:lan",
         "state_class": None,
-        "entity_category": "diagnostic",
+        "entity_category": EntityCategory.DIAGNOSTIC,
     },
     # Frequency sensor
     "frequency": {
         "name": "Frequency",
-        "device_class": DEVICE_CLASS_FREQUENCY,
+        "device_class": SensorDeviceClass.FREQUENCY,
         "unit": HERTZ,
         "icon": "mdi:sine-wave",
-        "state_class": "measurement",
+        "state_class": SensorStateClass.MEASUREMENT,
         "entity_category": None,
     },
     # Current sensor
     "current": {
         "name": "Current",
-        "device_class": DEVICE_CLASS_CURRENT,
+        "device_class": SensorDeviceClass.CURRENT,
         "unit": AMPERE,
         "icon": "mdi:current-ac",
-        "state_class": "measurement",
+        "state_class": SensorStateClass.MEASUREMENT,
         "entity_category": None,
     },
     # Energy sensor
     "energy": {
         "name": "Energy",
-        "device_class": DEVICE_CLASS_ENERGY,
+        "device_class": SensorDeviceClass.ENERGY,
         "unit": KILOWATT_HOUR,
         "icon": "mdi:lightning-bolt-circle",
-        "state_class": "total_increasing",
+        "state_class": SensorStateClass.TOTAL_INCREASING,
         "entity_category": None,
     },
 }
@@ -175,38 +172,38 @@ ALARM_SENSOR_TYPES = {
         "name": "Alarm Active",
         "device_class": "problem",
         "icon": "mdi:alarm-light",
-        "entity_category": "diagnostic",
+        "entity_category": EntityCategory.DIAGNOSTIC,
     },
     "alarm_count": {
         "name": "Alarm Count",
         "device_class": None,
         "icon": "mdi:counter",
-        "state_class": "measurement",
-        "entity_category": "diagnostic",
+        "state_class": SensorStateClass.MEASUREMENT,
+        "entity_category": EntityCategory.DIAGNOSTIC,
     },
     "last_alarm": {
         "name": "Last Alarm",
         "device_class": None,
         "icon": "mdi:bell-alert",
-        "entity_category": "diagnostic",
+        "entity_category": EntityCategory.DIAGNOSTIC,
     },
     "event_active": {
         "name": "Event Active",
         "device_class": "problem",
         "icon": "mdi:information-outline",
-        "entity_category": "diagnostic",
+        "entity_category": EntityCategory.DIAGNOSTIC,
     },
     "event_count": {
         "name": "Event Count",
         "device_class": None,
         "icon": "mdi:counter",
-        "state_class": "measurement",
-        "entity_category": "diagnostic",
+        "state_class": SensorStateClass.MEASUREMENT,
+        "entity_category": EntityCategory.DIAGNOSTIC,
     },
     "last_event": {
         "name": "Last Event",
         "device_class": None,
         "icon": "mdi:message-alert",
-        "entity_category": "diagnostic",
+        "entity_category": EntityCategory.DIAGNOSTIC,
     },
 }

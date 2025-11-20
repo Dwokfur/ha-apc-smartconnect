@@ -4,14 +4,9 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from homeassistant.components.sensor import (
-    SensorDeviceClass,
-    SensorEntity,
-    SensorStateClass,
-)
+from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -105,8 +100,7 @@ class APCSmartConnectSensor(CoordinatorEntity, SensorEntity):
         self._attr_name = f"{device['name']} {sensor_config['name']}"
         
         # Set device class
-        if sensor_config.get("device_class"):
-            self._attr_device_class = sensor_config["device_class"]
+        self._attr_device_class = sensor_config.get("device_class")
         
         # Set unit of measurement
         self._attr_native_unit_of_measurement = sensor_config.get("unit")
@@ -115,12 +109,10 @@ class APCSmartConnectSensor(CoordinatorEntity, SensorEntity):
         self._attr_icon = sensor_config.get("icon")
         
         # Set state class
-        if sensor_config.get("state_class"):
-            self._attr_state_class = sensor_config["state_class"]
+        self._attr_state_class = sensor_config.get("state_class")
         
         # Set entity category
-        if sensor_config.get("entity_category"):
-            self._attr_entity_category = sensor_config["entity_category"]
+        self._attr_entity_category = sensor_config.get("entity_category")
         
         # Set device info
         self._attr_device_info = {
@@ -177,19 +169,16 @@ class APCSmartConnectAlarmSensor(CoordinatorEntity, SensorEntity):
         self._attr_name = f"{device['name']} {sensor_config['name']}"
         
         # Set device class
-        if sensor_config.get("device_class"):
-            self._attr_device_class = sensor_config["device_class"]
+        self._attr_device_class = sensor_config.get("device_class")
         
         # Set icon
         self._attr_icon = sensor_config.get("icon")
         
         # Set state class
-        if sensor_config.get("state_class"):
-            self._attr_state_class = sensor_config["state_class"]
+        self._attr_state_class = sensor_config.get("state_class")
         
         # Set entity category
-        if sensor_config.get("entity_category"):
-            self._attr_entity_category = sensor_config["entity_category"]
+        self._attr_entity_category = sensor_config.get("entity_category")
         
         # Set device info
         self._attr_device_info = {
@@ -273,19 +262,16 @@ class APCSmartConnectEventSensor(CoordinatorEntity, SensorEntity):
         self._attr_name = f"{device['name']} {sensor_config['name']}"
         
         # Set device class
-        if sensor_config.get("device_class"):
-            self._attr_device_class = sensor_config["device_class"]
+        self._attr_device_class = sensor_config.get("device_class")
         
         # Set icon
         self._attr_icon = sensor_config.get("icon")
         
         # Set state class
-        if sensor_config.get("state_class"):
-            self._attr_state_class = sensor_config["state_class"]
+        self._attr_state_class = sensor_config.get("state_class")
         
         # Set entity category
-        if sensor_config.get("entity_category"):
-            self._attr_entity_category = sensor_config["entity_category"]
+        self._attr_entity_category = sensor_config.get("entity_category")
         
         # Set device info
         self._attr_device_info = {
