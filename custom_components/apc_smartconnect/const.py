@@ -3,8 +3,6 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "apc_smartconnect"
-CONF_EMAIL: Final = "email"
-CONF_PASSWORD: Final = "password"
 
 # Update interval
 UPDATE_INTERVAL = timedelta(minutes=5)
