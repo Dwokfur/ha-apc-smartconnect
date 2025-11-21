@@ -80,14 +80,25 @@ def _create_client(email: str, password: str):
             """Get all devices and transform data to integration format."""
             devices = []
             
-            # Fetch all gateways from APC SmartConnect API
-            gateways_response = self._apc_client.gateways()
+            try:
+                # Fetch all gateways from APC SmartConnect API
+                gateways_response = self._apc_client.gateways()
+            except Exception as err:
+                _LOGGER.error("Failed to fetch gateways from APC SmartConnect: %s", err)
+                raise
             
             for gateway in gateways_response.get('gateways', []):
                 device_id = gateway.get('deviceId')
+                if not device_id:
+                    _LOGGER.warning("Gateway missing deviceId, skipping: %s", gateway)
+                    continue
                 
-                # Get detailed information for each gateway
-                detail = self._apc_client.gateway_info_detail(device_id)
+                try:
+                    # Get detailed information for each gateway
+                    detail = self._apc_client.gateway_info_detail(device_id)
+                except Exception as err:
+                    _LOGGER.error("Failed to fetch details for device %s: %s", device_id, err)
+                    continue
                 
                 # Transform the data into the format expected by the integration
                 device_data = {
