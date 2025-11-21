@@ -114,7 +114,7 @@ class APCSmartConnectOutletSwitch(CoordinatorEntity, SwitchEntity):
     @property
     def translation_placeholders(self) -> dict[str, str] | None:
         """Return translation placeholders."""
-        if self._outlet_id != "main" and hasattr(self, '_outlet_number'):
+        if self._outlet_id != "main":
             return {"outlet_number": self._outlet_number}
         return None
 
