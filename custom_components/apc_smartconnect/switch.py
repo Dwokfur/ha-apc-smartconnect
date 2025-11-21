@@ -65,9 +65,13 @@ class APCSmartConnectOutletSwitch(CoordinatorEntity, SwitchEntity):
         # Set unique ID
         self._attr_unique_id = f"{device_id}_outlet_{self._outlet_id}"
         
-        # Set name
-        outlet_name = outlet.get("name", f"Outlet {self._outlet_id}")
-        self._attr_name = f"{device['name']} {outlet_name}"
+        # Set translation key for i18n support
+        if self._outlet_id == "main":
+            self._attr_translation_key = "main_outlet"
+        else:
+            self._attr_translation_key = "outlet"
+            # Extract outlet number from outlet_id (e.g., "outlet_1" -> "1")
+            self._outlet_number = self._outlet_id.replace("outlet_", "")
         
         # Set icon based on outlet type
         if self._outlet_id == "main":
@@ -106,6 +110,13 @@ class APCSmartConnectOutletSwitch(CoordinatorEntity, SwitchEntity):
             self.coordinator.last_update_success
             and self._device_id in self.coordinator.data
         )
+
+    @property
+    def translation_placeholders(self) -> dict[str, str] | None:
+        """Return translation placeholders."""
+        if self._outlet_id != "main":
+            return {"outlet_number": self._outlet_number}
+        return None
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the switch on."""

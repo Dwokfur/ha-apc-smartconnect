@@ -96,8 +96,8 @@ class APCSmartConnectSensor(CoordinatorEntity, SensorEntity):
         # Set unique ID
         self._attr_unique_id = f"{device_id}_{sensor_type}"
         
-        # Set name
-        self._attr_name = f"{device['name']} {sensor_config['name']}"
+        # Set translation key for i18n support
+        self._attr_translation_key = sensor_type
         
         # Set device class
         self._attr_device_class = sensor_config.get("device_class")
@@ -165,8 +165,8 @@ class APCSmartConnectAlarmSensor(CoordinatorEntity, SensorEntity):
         # Set unique ID
         self._attr_unique_id = f"{device_id}_{sensor_type}"
         
-        # Set name
-        self._attr_name = f"{device['name']} {sensor_config['name']}"
+        # Set translation key for i18n support
+        self._attr_translation_key = sensor_type
         
         # Set device class
         self._attr_device_class = sensor_config.get("device_class")
@@ -258,8 +258,8 @@ class APCSmartConnectEventSensor(CoordinatorEntity, SensorEntity):
         # Set unique ID
         self._attr_unique_id = f"{device_id}_{sensor_type}"
         
-        # Set name
-        self._attr_name = f"{device['name']} {sensor_config['name']}"
+        # Set translation key for i18n support
+        self._attr_translation_key = sensor_type
         
         # Set device class
         self._attr_device_class = sensor_config.get("device_class")
