@@ -89,21 +89,23 @@ class APCSmartConnectConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     def _validate_credentials(self, email: str, password: str) -> None:
         """Validate credentials synchronously."""
-        # This is a placeholder for actual credential validation
-        # In production, this should use the apc-smartconnect library
-        # to authenticate and verify the credentials
+        # Import the vendorized library
+        from .apc_smartconnect import APCSmartConnect
         
-        # For demonstration, we'll do basic validation
+        # Basic validation
         if not email or "@" not in email:
             raise InvalidAuth("Invalid email format")
         
         if not password or len(password) < 6:
             raise InvalidAuth("Invalid password")
         
-        # In production, call the API here:
-        # client = APCSmartConnect(email, password)
-        # if not client.authenticate():
-        #     raise InvalidAuth("Authentication failed")
+        # Authenticate with the APC SmartConnect service
+        try:
+            client = APCSmartConnect()
+            client.login(email, password)
+            # If login succeeds, credentials are valid
+        except Exception as err:
+            raise InvalidAuth(f"Authentication failed: {err}") from err
 
 
 class CannotConnect(Exception):
