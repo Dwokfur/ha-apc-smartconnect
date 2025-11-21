@@ -1,0 +1,100 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "APC SmartConnect",
+        "description": "Entrez vos identifiants APC SmartConnect",
+        "data": {
+          "email": "Courriel",
+          "password": "Mot de passe"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Courriel ou mot de passe invalide",
+      "cannot_connect": "Impossible de se connecter à APC SmartConnect",
+      "unknown": "Une erreur inattendue s'est produite"
+    },
+    "abort": {
+      "already_configured": "Ce compte est déjà configuré"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "battery_capacity": {
+        "name": "Capacité de la batterie"
+      },
+      "battery_runtime": {
+        "name": "Autonomie de la batterie"
+      },
+      "battery_runtime_seconds": {
+        "name": "Autonomie de la batterie en secondes"
+      },
+      "battery_status": {
+        "name": "État de la batterie"
+      },
+      "input_voltage": {
+        "name": "Tension d'entrée"
+      },
+      "output_voltage": {
+        "name": "Tension de sortie"
+      },
+      "power": {
+        "name": "Puissance"
+      },
+      "load": {
+        "name": "Charge"
+      },
+      "apparent_power": {
+        "name": "Puissance apparente"
+      },
+      "status": {
+        "name": "État"
+      },
+      "ups_mode": {
+        "name": "Mode UPS"
+      },
+      "temperature": {
+        "name": "Température"
+      },
+      "network_status": {
+        "name": "État du réseau"
+      },
+      "frequency": {
+        "name": "Fréquence"
+      },
+      "current": {
+        "name": "Courant"
+      },
+      "energy": {
+        "name": "Énergie"
+      },
+      "alarm_active": {
+        "name": "Alarme active"
+      },
+      "alarm_count": {
+        "name": "Nombre d'alarmes"
+      },
+      "last_alarm": {
+        "name": "Dernière alarme"
+      },
+      "event_active": {
+        "name": "Événement actif"
+      },
+      "event_count": {
+        "name": "Nombre d'événements"
+      },
+      "last_event": {
+        "name": "Dernier événement"
+      }
+    },
+    "switch": {
+      "main_outlet": {
+        "name": "Prise principale"
+      },
+      "outlet": {
+        "name": "Prise {outlet_number}"
+      }
+    }
+  }
+}

@@ -202,6 +202,41 @@ The only external dependency is the `requests` library, which Home Assistant alr
 - Sensors are only created for metrics provided by your specific device
 - Check the device capabilities in the APC SmartConnect app
 
+## Language Support
+
+This integration supports multiple languages for the user interface. Currently supported languages include:
+
+- **English** (en) - Default language
+- **French** (fr) - Français
+- **Spanish** (es) - Español
+
+All entity names, configuration flow messages, and error messages are fully translated. Home Assistant will automatically use the appropriate language based on your Home Assistant language settings.
+
+### Contributing Translations
+
+We welcome contributions of new translations! To add support for a new language:
+
+1. Fork the repository
+2. Create a new translation file in `custom_components/apc_smartconnect/translations/` named with the appropriate language code (e.g., `de.json` for German, `it.json` for Italian)
+3. Copy the structure from `en.json` and translate all strings
+4. Make sure to translate:
+   - Config flow messages (title, description, errors)
+   - Entity names (sensors and switches)
+   - All user-facing text
+5. Test your translation by setting Home Assistant to your language
+6. Submit a pull request with your translation
+
+Translation files follow Home Assistant's standard format. For more information on the structure, see the [Home Assistant translation documentation](https://developers.home-assistant.io/docs/translations_custom_integration/).
+
+### Translation Coverage
+
+The following areas are fully translated:
+- Configuration flow (setup wizard)
+- All sensor entity names
+- All switch entity names
+- Error messages
+- Status messages
+
 ## Development & Contributing
 
 ### Project Structure
