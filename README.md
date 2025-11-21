@@ -174,7 +174,9 @@ Examples:
 
 ### Python Dependencies
 
-The integration requires the `apc-smartconnect` Python library (version 0.1.0 or newer), which will be automatically installed by Home Assistant.
+This integration includes a **vendorized copy** of the `apc-smartconnect-py` library (https://github.com/datagutten/apc-smartconnect-py), meaning the library code is bundled directly with the integration. No additional `pip install` is required - all necessary code is included in the `custom_components/apc_smartconnect/apc_smartconnect/` directory.
+
+The only external dependency is the `requests` library, which Home Assistant already includes by default.
 
 ## Troubleshooting
 
@@ -215,12 +217,23 @@ custom_components/apc_smartconnect/
 
 ### Mock Client
 
-The integration includes a mock APC SmartConnect client for development and testing. In production, this should be replaced with the actual `apc-smartconnect` library implementation.
+The integration uses the **vendorized apc-smartconnect-py library** located in `custom_components/apc_smartconnect/apc_smartconnect/` for communicating with the APC SmartConnect cloud service. This library is bundled directly with the integration and includes:
 
-To integrate with the real library:
-1. Update `__init__.py` to import the actual `APCSmartConnect` class
-2. Replace the `MockAPCClient` with real client instantiation
-3. Implement the `set_outlet_state()` method in the library
+- Authentication with APC SmartConnect/Schneider Electric services
+- Gateway (UPS device) discovery and monitoring
+- Real-time metrics collection
+- Device information retrieval
+
+The integration wraps this library with an adapter layer in `__init__.py` to transform the API responses into the format expected by Home Assistant entities.
+
+### Vendorized Library
+
+This integration includes a vendorized copy of the `apc-smartconnect-py` library to:
+1. Ensure compatibility and stability
+2. Eliminate external dependency management
+3. Simplify installation for end users
+
+The vendorized library is maintained in `custom_components/apc_smartconnect/apc_smartconnect/` and can be updated when needed from the upstream repository at https://github.com/datagutten/apc-smartconnect-py.
 
 ### Adding New Sensor Types
 

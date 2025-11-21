@@ -14,6 +14,7 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 
+from .apc_smartconnect import APCSmartConnect
 from .const import DOMAIN, UPDATE_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
@@ -64,68 +65,132 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 def _create_client(email: str, password: str):
     """Create APC SmartConnect client (synchronous)."""
-    # This is a placeholder for the actual library initialization
-    # In production, this should be:
-    # from apc_smartconnect import APCSmartConnect
-    # return APCSmartConnect(email, password)
-    
-    # For now, return a mock client object
-    class MockAPCClient:
-        """Mock APC SmartConnect client."""
+    # Create wrapper around the vendorized apc_smartconnect library
+    class APCSmartConnectWrapper:
+        """Wrapper for APC SmartConnect client to adapt API to integration needs."""
         
         def __init__(self, email, password):
             self.email = email
             self.password = password
-            self._devices = []
+            self._apc_client = APCSmartConnect()
+            # Authenticate with the APC SmartConnect service
+            self._apc_client.login(email, password)
         
         def get_devices(self):
-            """Get all devices."""
-            # Mock device data structure
-            return [
-                {
-                    "id": "mock-device-1",
-                    "name": "APC Smart-UPS 1500",
-                    "model": "SMT1500RM2U",
-                    "serial": "ABC123456",
-                    "firmware": "1.0.0",
-                    "metrics": {
-                        "battery_capacity": 100,
-                        "battery_runtime": 45,
-                        "battery_runtime_seconds": 2700,
-                        "battery_status": "Normal",
-                        "input_voltage": 120.5,
-                        "output_voltage": 120.0,
-                        "power": 150,
-                        "load": 10,
-                        "apparent_power": 180,
-                        "status": "Online",
-                        "ups_mode": "Normal",
-                        "temperature": 25.5,
-                        "network_status": "Connected",
-                        "frequency": 60.0,
-                        "current": 1.25,
-                        "energy": 1.5,
-                    },
-                    "alarms": [],
-                    "events": [],
-                    "outlets": [
-                        {"id": "main", "name": "Main Outlet", "status": True, "controllable": True},
-                        {"id": "outlet_1", "name": "Outlet 1", "status": True, "controllable": True},
-                        {"id": "outlet_2", "name": "Outlet 2", "status": True, "controllable": True},
-                    ],
+            """Get all devices and transform data to integration format."""
+            devices = []
+            
+            try:
+                # Fetch all gateways from APC SmartConnect API
+                gateways_response = self._apc_client.gateways()
+            except Exception as err:
+                _LOGGER.error("Failed to fetch gateways from APC SmartConnect: %s", err)
+                raise
+            
+            for gateway in gateways_response.get('gateways', []):
+                device_id = gateway.get('deviceId')
+                if not device_id:
+                    _LOGGER.warning("Gateway missing deviceId, skipping: %s", gateway)
+                    continue
+                
+                try:
+                    # Get detailed information for each gateway
+                    detail = self._apc_client.gateway_info_detail(device_id)
+                except Exception as err:
+                    _LOGGER.error("Failed to fetch details for device %s: %s", device_id, err)
+                    continue
+                
+                # Transform the data into the format expected by the integration
+                device_data = {
+                    "id": device_id,
+                    "name": gateway.get('deviceName', 'APC UPS'),
+                    "model": gateway.get('model', 'Unknown'),
+                    "serial": gateway.get('serialNumber', 'Unknown'),
+                    "firmware": gateway.get('firmwareVersion', 'Unknown'),
+                    "metrics": self._extract_metrics(detail),
+                    "alarms": detail.get('alarms', []),
+                    "events": detail.get('events', []),
+                    "outlets": self._extract_outlets(detail),
                 }
-            ]
+                
+                devices.append(device_data)
+            
+            return devices
+        
+        def _extract_metrics(self, detail):
+            """Extract metrics from gateway detail response."""
+            metrics = {}
+            
+            # Battery metrics
+            battery = detail.get('battery', {})
+            metrics['battery_capacity'] = battery.get('capacity')
+            metrics['battery_runtime'] = battery.get('runtime')
+            metrics['battery_runtime_seconds'] = battery.get('runtimeSeconds')
+            metrics['battery_status'] = battery.get('status')
+            
+            # Input metrics
+            input_data = detail.get('input', {})
+            metrics['input_voltage'] = input_data.get('voltage')
+            metrics['frequency'] = input_data.get('frequency')
+            
+            # Output metrics
+            output = detail.get('output', {})
+            metrics['output_voltage'] = output.get('voltage')
+            metrics['power'] = output.get('activePower')
+            metrics['apparent_power'] = output.get('apparentPower')
+            metrics['load'] = output.get('loadPercentage')
+            metrics['current'] = output.get('current')
+            metrics['energy'] = output.get('energy')
+            
+            # Status metrics
+            metrics['status'] = detail.get('status')
+            metrics['ups_mode'] = detail.get('upsMode')
+            
+            # Network metrics
+            network = detail.get('network', {})
+            metrics['network_status'] = network.get('status')
+            
+            # Temperature
+            metrics['temperature'] = detail.get('temperature')
+            
+            return metrics
+        
+        def _extract_outlets(self, detail):
+            """Extract outlet information from gateway detail response."""
+            outlets = []
+            
+            # Main outlet
+            main_outlet = detail.get('main_outlet', {})
+            if main_outlet:
+                outlets.append({
+                    "id": "main",
+                    "name": "Main Outlet",
+                    "status": main_outlet.get('status') == 'on',
+                    "controllable": main_outlet.get('controllable', True)
+                })
+            
+            # Switched outlets
+            switched_outlets = detail.get('switched_outlets', [])
+            for idx, outlet in enumerate(switched_outlets, 1):
+                outlets.append({
+                    "id": f"outlet_{idx}",
+                    "name": outlet.get('name', f"Outlet {idx}"),
+                    "status": outlet.get('status') == 'on',
+                    "controllable": outlet.get('controllable', True)
+                })
+            
+            return outlets
         
         def set_outlet_state(self, device_id, outlet_id, state):
             """Set outlet state (placeholder for library method)."""
-            # This method should be implemented in the actual library
-            # For now, this is a stub that will need to be patched
+            # The apc-smartconnect library doesn't yet implement outlet control
+            # This is a stub that will need to be implemented when the library adds support
             raise NotImplementedError(
                 "Outlet control is not yet implemented in the apc-smartconnect library. "
                 "This is a placeholder for future implementation."
             )
     
-    return MockAPCClient(email, password)
+    return APCSmartConnectWrapper(email, password)
 
 
 class APCSmartConnectCoordinator(DataUpdateCoordinator):
